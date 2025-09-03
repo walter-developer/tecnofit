@@ -1,0 +1,95 @@
+name: tecnofit
+
+################
+
+networks:
+  network-hyperf:
+    driver: bridge
+
+################
+
+volumes:
+  mysql:
+    driver: local
+
+################
+
+services:
+
+  # backend
+  hyperf:
+    image: hyperf
+    restart: always
+    container_name: hyperf
+    #command: ["start"]
+    command: ["server:watch"]
+    volumes:
+      - ./:/app
+    ports:
+      - 80:9501
+      - 9501:9501
+    env_file:
+        - ./.env
+    networks:
+      - network-hyperf
+    depends_on:
+      composer:
+        condition: service_completed_successfully 
+    extra_hosts:
+      - "host.docker.internal:host-gateway"      
+    build:
+      context: ./server/
+      dockerfile: Dockerfile
+      args:
+        APP_ENV: ${APP_ENV:-prod}
+        TIMEZONE: ${TIMEZONE:-"America/Sao_Paulo"}
+        SCAN_CACHEABLE: ${SCAN_CACHEABLE:-true}
+
+  # database
+  mysql:
+    restart: on-failure:2
+    container_name: mysql
+    image: mysql:8
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    networks:
+      - network-hyperf
+    env_file:
+      - ./.env
+    volumes:
+      - mysql:/var/lib/mysql
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # mailpit
+  mailpit :
+    restart: on-failure:2
+    privileged: true
+    image: axllent/mailpit:latest
+    container_name: mailpit
+    env_file:
+        - ./.env
+    networks:
+        - network-hyperf
+    ports:
+        - '8025:8025'
+        - '1025:1025'
+    extra_hosts:
+        - host.docker.internal:host-gateway
+
+  # composer
+  composer:
+    restart: 'no'
+    container_name: composer
+    entrypoint: ["composer"]
+    networks:
+      - network-hyperf
+    volumes:
+      - ./:/app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    build:
+      context: ./server/
+      dockerfile: Dockerfile
+    command: >
+        install --no-scripts --prefer-dist --optimize-autoloader
