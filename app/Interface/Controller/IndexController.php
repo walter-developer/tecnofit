@@ -10,10 +10,16 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace App\Controller;
+namespace App\Interface\Controller;
 
 class IndexController extends AbstractController
 {
+
+    public function teste()
+    {
+        return 'ok';
+    }
+
     public function index()
     {
         $user = $this->request->input('user', 'Hyperf');
