@@ -5,18 +5,19 @@ declare(strict_types=1);
 namespace App\Domain\Entities;
 
 use App\Domain\Domain;
+use App\Domain\Enums\MethodEnum;
 
 class AccountWithdraw extends Domain
 {
     public function __construct(
-        public string $method,
+        public MethodEnum $method,
         public float $amount,
-        public bool $scheduled = false,
+        public Account $account,
         public bool $done = false,
         public bool $error = false,
-        public Account $account,
+        public bool $scheduled = false,
         public ?string $errorReason = null,
-        public ?\DateTime $scheduledFor = null,
+        public ?\DateTime $schedule = null,
         public readonly ?string $id = null,
         public readonly ?\DateTime $createdAt = null,
         public readonly ?\DateTime $updatedAt = null,
@@ -28,7 +29,7 @@ class AccountWithdraw extends Domain
         return $this->id;
     }
 
-    public function method(): string
+    public function method(): MethodEnum
     {
         return $this->method;
     }
@@ -63,9 +64,9 @@ class AccountWithdraw extends Domain
         return $this->account;
     }
 
-    public function scheduledFor(): ?\DateTime
+    public function schedule(): ?\DateTime
     {
-        return $this->scheduledFor;
+        return $this->schedule;
     }
 
     public function createdAt(): ?\DateTime

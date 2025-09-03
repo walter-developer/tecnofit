@@ -12,15 +12,15 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Database\Models;
 
+use App\Domain\Enums\TypeKeyEnum;
 use App\Infrastructure\Database\Models\Main\Model;
 
 class AccountWithdrawPix extends Model
 {
 
-    protected $fillable = [
+    protected array $fillable = [
         'id',
         'account_withdraw_id',
-        'type',
         'key',
         'type',
         'created_at',
@@ -28,5 +28,14 @@ class AccountWithdrawPix extends Model
         'deleted_at'
     ];
 
-    protected $table = 'account_withdraw_pix';
+    protected ?string $table = 'account_withdraw_pix';
+
+    protected array $casts = [
+        'type' => TypeKeyEnum::class,
+    ];
+
+    public function withdraw()
+    {
+        return $this->belongsTo(AccountWithdraw::class, 'account_id');
+    }
 }

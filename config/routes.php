@@ -10,12 +10,21 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
+use App\Interface\Controller\IndexController;
 use Hyperf\HttpServer\Router\Router;
 
-Router::addRoute(['GET', 'POST', 'HEAD'], '/', 'App\Interface\Controller\IndexController@index');
+Router::get('/',  [IndexController::class, 'index']);
 
-Router::get('/teste', 'App\Interface\Controller\IndexController@teste');
+Router::addGroup('/account', function () {
+    ## http://localhost/account/
+    ## Nova Conta
+    Router::post('/',  [IndexController::class, 'account']);
 
-Router::get('/favicon.ico', function () {
-    return '';
+    ## http://localhost/account/{accountId}
+    ## Adicionar Credito a Conta
+    Router::post('/{accountId}', [IndexController::class, 'balance']);
+
+    ## http://localhost/account/{accountId}/balance/withdraw
+    ## Efetuar saque da conta
+    Router::post('/{accountId}/balance/withdraw', [IndexController::class, 'withdraw']);
 });

@@ -17,7 +17,7 @@ use App\Infrastructure\Database\Models\Main\Model;
 abstract class Account extends Model
 {
 
-    protected $fillable = [
+    protected array $fillable = [
         'id',
         'name',
         'balance',
@@ -26,5 +26,10 @@ abstract class Account extends Model
         'deleted_at'
     ];
 
-    protected $table = 'account';
+    protected ?string $table = 'account';
+
+    public function withdraws()
+    {
+        return $this->hasMany(AccountWithdraw::class, 'account_id');
+    }
 }

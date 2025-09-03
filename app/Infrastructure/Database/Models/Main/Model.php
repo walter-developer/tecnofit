@@ -20,7 +20,7 @@ class Model extends HyperfModel
 
     use HasUuids;
 
-    public $incrementing = false;
+    public bool $incrementing = true;
 
-    protected $keyType = 'string';
+    protected string $keyType = 'string';
 }

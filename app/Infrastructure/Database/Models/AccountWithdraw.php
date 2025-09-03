@@ -12,12 +12,13 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Database\Models;
 
+use App\Domain\Enums\MethodEnum;
 use App\Infrastructure\Database\Models\Main\Model;
 
 abstract class AccountWithdraw extends Model
 {
 
-    protected $fillable = [
+    protected array $fillable = [
         'id',
         'account_id',
         'method',
@@ -32,5 +33,19 @@ abstract class AccountWithdraw extends Model
         'deleted_at'
     ];
 
-    protected $table = 'account_withdraw';
+    protected ?string $table = 'account_withdraw';
+
+    protected array $casts = [
+        'method' => MethodEnum::class,
+    ];
+
+    public function account()
+    {
+        return $this->belongsTo(Account::class, 'account_id');
+    }
+
+    public function receiver()
+    {
+        return $this->hasOne(AccountWithdrawPix::class, 'account_withdraw_id');
+    }
 }
