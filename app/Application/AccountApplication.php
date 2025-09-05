@@ -25,7 +25,7 @@ class AccountApplication
 
     private function validateExisitsAccount(string $accountId): void
     {
-
+        //Validação de conta existente
         if (!$this->accountRepository->existsById($accountId)) {
             throw new InvalidAccountException();
         }
@@ -33,6 +33,7 @@ class AccountApplication
 
     private function validateSufficientBalance(Account $account, float $withdrawAmount): void
     {
+        //Validação de saldo suficiente
         if ($account->balance() < $withdrawAmount) {
             throw new InsufficientBalanceException(
                 $account->balance(),
@@ -44,16 +45,17 @@ class AccountApplication
     public function processWithdrawal(AccountWithdraw $accountWithdraw): void
     {
         try {
+            //Processamento agendado
             $this->tryProcessWithdrawal($accountWithdraw);
-        } catch (InsufficientBalanceException $e) {
-            $this->failProcessWithdrawal($accountWithdraw, $e);
         } catch (Throwable $e) {
+            //Callback falha de processamento agendado
             $this->failProcessWithdrawal($accountWithdraw, $e);
         }
     }
 
     public function createAccount(array $account): array
     {
+        //Gera uma nova conta para saque
         $account = $this->accountRepository->save(
             new Account(
                 name: $account['name'],
@@ -70,6 +72,7 @@ class AccountApplication
 
     public function updateBalance(array $account): array
     {
+        //validação de conta existente
         $this->validateExisitsAccount($account['id']);
 
         $account = $this->accountRepository->updateBalance(
@@ -88,13 +91,17 @@ class AccountApplication
     public function createWithdraw(array $transaction): array
     {
 
+        //validação de conta existente
         $this->validateExisitsAccount($transaction['account_id']);
 
         $withdrawAmount = floatval($transaction['amount']);
         $account =  $this->accountRepository->findById($transaction['account_id']);
 
+        //Validação de saldo suficiente para operação
         $this->validateSufficientBalance($account, $withdrawAmount);
 
+        //Saldo debitado antecipadamente para saques agendados
+        //Saldo debitado antecipadamente para saques instantâneos
         $account = $this->accountRepository->updateBalance(
             new Account(
                 id: $account->id(),
@@ -102,6 +109,7 @@ class AccountApplication
             )
         );
 
+        //Agendamento e ou pagamento instantaneo do saque
         $withdraw =  $this->accountWithdrawRepository->save(
             new AccountWithdraw(
                 account: $account,
@@ -114,6 +122,7 @@ class AccountApplication
             )
         );
 
+        //Registros das informações de pagamento
         $withdrawPix =  $this->accountWithdrawPixRepository->save(
             new AccountWithdrawPix(
                 accountWithdraw: $withdraw,
@@ -134,15 +143,8 @@ class AccountApplication
 
     private function tryProcessWithdrawal(AccountWithdraw $accountWithdraw): void
     {
+        //Tenta processamento agendado
         $account =  $accountWithdraw->account();
-        $this->validateSufficientBalance($account, $accountWithdraw->amount());
-
-        $account = $this->accountRepository->updateBalance(
-            new Account(
-                id: $account->id(),
-                balance: $account->balance() - $accountWithdraw->amount()
-            )
-        );
 
         $this->accountWithdrawRepository->save(
             new AccountWithdraw(
@@ -158,6 +160,7 @@ class AccountApplication
 
     private function failProcessWithdrawal(AccountWithdraw $accountWithdraw, Throwable $exception): void
     {
+        //Callback de processamento agendado com falha
         $this->accountWithdrawRepository->save(
             new AccountWithdraw(
                 error: true,

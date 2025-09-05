@@ -8,17 +8,22 @@ A aplciação fica disponivel na porta padrão hyperf ( localhost:9501 ),
 e na padrão web ( localhost:80 ), a fim de facilitar o teste local.
 
 
+CRON ( Usando nativo Hyperf ):
+
+Foi desenvolvido uma classe do tipo use Hyperf\Command\Command para processamento de saque agendado;
+Na vida real, algumas vezes acontece do CRON parar, e ser necessário executar manualmente.
+Com isso posso reultilizar ela para processar no Cron, e também processar manualmente chamando o comando abaixo:
+
+php bin/hyperf.php command:process-withdraw
+
+
+
 /**
 
 Ainda falta:
 
-- Finalizar de integrar as camadas hexagonais do sistema
-  
-- Validar o saldo nunca ser negativo e menor que o valor do saque
 
-- Subitrair o valor de saque do saldo do cliente
-
-- Fazer o cron que fica realizando o pagamento de saque agendado
+- Fazer envio de email.
 
 - Fazer testes unitários
 
