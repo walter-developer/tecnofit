@@ -24,7 +24,7 @@ class AccountWithdraw extends Domain
         public readonly ?\DateTime $deletedAt = null,
     ) {}
 
-    public function id(): string
+    public function id(): ?string
     {
         return $this->id;
     }

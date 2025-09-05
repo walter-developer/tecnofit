@@ -14,13 +14,20 @@ namespace App\Infrastructure\Database\Models\Main;
 
 use Hyperf\Database\Model\Concerns\HasUuids;
 use Hyperf\Database\Model\Model as HyperfModel;
+use Hyperf\Database\Model\Builder;
 
 class Model extends HyperfModel
 {
-
     use HasUuids;
 
-    public bool $incrementing = true;
+    public bool $incrementing = false;
 
     protected string $keyType = 'string';
+
+    protected function performInsert(Builder $query)
+    {
+        $key = $this->getKeyName();
+        $this->{$key} = $this->newUniqueId();
+        return parent::performInsert($query);
+    }
 }

@@ -34,7 +34,7 @@ trait DomainMapper
             done: $db->done,
             error: $db->error,
             errorReason: $db->error_reason,
-            schedule: $db->schedule,
+            schedule: $db->scheduled_for,
             createdAt: $db->created_at,
             updatedAt: $db->updated_at,
             deletedAt: $db->deleted_at,
@@ -43,7 +43,8 @@ trait DomainMapper
 
     protected function toAccountWithdrawPixDomain(AccountWithdrawPixDb $db): AccountWithdrawPix
     {
-        $withdrawDomain = $this->toAccountWithdrawDomain($db->accountWithdraw);
+
+        $withdrawDomain = $this->toAccountWithdrawDomain($db->withdraw);
 
         return new AccountWithdrawPix(
             id: $db->id,

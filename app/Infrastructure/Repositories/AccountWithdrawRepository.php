@@ -31,7 +31,7 @@ class AccountWithdrawRepository implements AccountWithdrawContract
                     'done' => $accountWithdraw->done(),
                     'error' => $accountWithdraw->error(),
                     'errorReason' => $accountWithdraw->errorReason(),
-                    'scheduled' => $accountWithdraw->scheduled(),
+                    'scheduled_for' => $accountWithdraw->schedule(),
                     'account_id' => $accountWithdraw->account()->id(),
                 ]
             )

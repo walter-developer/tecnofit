@@ -10,8 +10,8 @@ class Account extends Domain
 {
 
     public function __construct(
-        public string $name,
-        public float $balance = 0.0,
+        public float $balance = 0,
+        public ?string $name = null,
         public readonly ?string $id = null,
         public readonly ?\DateTime $createdAt = null,
         public readonly ?\DateTime $updatedAt = null,
@@ -19,7 +19,7 @@ class Account extends Domain
 
     ) {}
 
-    public function id(): string
+    public function id(): ?string
     {
         return $this->id;
     }

@@ -8,7 +8,11 @@ use App\Domain\Entities\Account;
 
 interface AccountContract
 {
-    public function save(Account $account): Account;
+    public function existsById(string $id): bool;
 
     public function findById(string $id): ?Account;
+
+    public function save(Account $account): Account;
+
+    public function updateBalance(Account $account): Account;
 }

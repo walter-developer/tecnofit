@@ -1,6 +1,10 @@
 <?php
 
 declare(strict_types=1);
+
+use App\Infrastructure\Exception\AppExceptionHandler;
+use Hyperf\HttpServer\Exception\Handler\HttpExceptionHandler;
+
 /**
  * This file is part of Hyperf.
  *
@@ -12,8 +16,8 @@ declare(strict_types=1);
 return [
     'handler' => [
         'http' => [
-            Hyperf\HttpServer\Exception\Handler\HttpExceptionHandler::class,
-            App\Exception\Handler\AppExceptionHandler::class,
+            HttpExceptionHandler::class,
+            AppExceptionHandler::class,
         ],
     ],
 ];

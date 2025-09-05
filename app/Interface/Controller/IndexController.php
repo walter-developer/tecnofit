@@ -12,26 +12,26 @@ declare(strict_types=1);
 
 namespace App\Interface\Controller;
 
-use App\Interface\Request\CreateAccountBalanceRequest;
 use App\Interface\Request\CreateAccountRequest;
 use App\Interface\Request\CreateWithdrawPixRequest;
+use App\Interface\Request\UpdateAccountBalanceRequest;
 
 class IndexController extends AbstractController
 {
 
-    public function balance(CreateAccountBalanceRequest $balance)
+    public function balance(UpdateAccountBalanceRequest $balance)
     {
-        return 'balance';
+        return $this->account->updateBalance($balance->validated());
     }
 
     public function account(CreateAccountRequest $account)
     {
-        return 'account';
+        return $this->account->createAccount($account->validated());
     }
 
     public function withdraw(CreateWithdrawPixRequest $withdraw)
     {
-        return 'withdraw';
+        return $this->account->createWithdraw($withdraw->validated());
     }
 
     public function index()

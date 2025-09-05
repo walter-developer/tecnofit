@@ -13,12 +13,13 @@ declare(strict_types=1);
 namespace App\Infrastructure\Database\Models;
 
 use App\Infrastructure\Database\Models\Main\Model;
+use Hyperf\Stringable\Str;
 
-abstract class Account extends Model
+
+class Account extends Model
 {
 
     protected array $fillable = [
-        'id',
         'name',
         'balance',
         'created_at',

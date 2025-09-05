@@ -19,7 +19,6 @@ class AccountWithdrawPix extends Model
 {
 
     protected array $fillable = [
-        'id',
         'account_withdraw_id',
         'key',
         'type',
@@ -36,6 +35,6 @@ class AccountWithdrawPix extends Model
 
     public function withdraw()
     {
-        return $this->belongsTo(AccountWithdraw::class, 'account_id');
+        return $this->belongsTo(AccountWithdraw::class, 'account_withdraw_id');
     }
 }

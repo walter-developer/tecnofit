@@ -15,11 +15,10 @@ namespace App\Infrastructure\Database\Models;
 use App\Domain\Enums\MethodEnum;
 use App\Infrastructure\Database\Models\Main\Model;
 
-abstract class AccountWithdraw extends Model
+class AccountWithdraw extends Model
 {
 
     protected array $fillable = [
-        'id',
         'account_id',
         'method',
         'amount',
@@ -37,6 +36,7 @@ abstract class AccountWithdraw extends Model
 
     protected array $casts = [
         'method' => MethodEnum::class,
+        'scheduled_for' => 'datetime',
     ];
 
     public function account()
