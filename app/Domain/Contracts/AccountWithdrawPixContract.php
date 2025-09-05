@@ -12,5 +12,5 @@ interface AccountWithdrawPixContract
 
     public function findById(string $id): ?AccountWithdrawPix;
 
-    public function findByWithdrawId(string $id): ?AccountWithdrawPix;
+    public function findWithdrawById(string $id): ?AccountWithdrawPix;
 }
