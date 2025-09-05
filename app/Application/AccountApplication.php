@@ -7,11 +7,13 @@ use App\Domain\Enums\TypeKeyEnum;
 use App\Domain\Contracts\AccountContract;
 use App\Domain\Contracts\AccountWithdrawContract;
 use App\Domain\Contracts\AccountWithdrawPixContract;
+use App\Domain\Contracts\WithdrawEmailContract;
 use App\Domain\Entities\Account;
 use App\Domain\Entities\AccountWithdraw;
 use App\Domain\Entities\AccountWithdrawPix;
 use App\Domain\Exception\InsufficientBalanceException;
 use App\Domain\Exception\InvalidAccountException;
+use App\Domain\ValueObjects\WithdrawEmail;
 use DateTime;
 use Throwable;
 
@@ -20,7 +22,8 @@ class AccountApplication
     public function __construct(
         protected AccountContract $accountRepository,
         protected AccountWithdrawContract $accountWithdrawRepository,
-        protected AccountWithdrawPixContract $accountWithdrawPixRepository
+        protected AccountWithdrawPixContract $accountWithdrawPixRepository,
+        protected WithdrawEmailContract $withdrawEmailRepository
     ) {}
 
     private function validateExisitsAccount(string $accountId): void
@@ -109,12 +112,12 @@ class AccountApplication
             )
         );
 
-        //Agendamento e ou pagamento instantaneo do saque
+        //Registra solicitação do saque
         $withdraw =  $this->accountWithdrawRepository->save(
             new AccountWithdraw(
+                done: false,
                 account: $account,
                 amount: $withdrawAmount,
-                done: !boolval($transaction['schedule']),
                 method: MethodEnum::from(strtoupper($transaction['method'])),
                 scheduled: boolval($transaction['schedule']),
                 schedule: boolval($transaction['schedule'])
@@ -131,6 +134,35 @@ class AccountApplication
             )
         );
 
+
+
+        if (!boolval($transaction['schedule'])) {
+
+            /*************************************************************
+             * 
+             * Aqui integração com banco para fazer o pagamento imediato
+             * 
+             ***********************************************************/
+
+            //confirma pagamentos imediato no banco
+            $this->accountWithdrawRepository->save(
+                new AccountWithdraw(
+                    id: $withdraw->id(),
+                    done: true,
+                    account: $account,
+                    amount: $withdrawAmount,
+                    method: MethodEnum::from(strtoupper($transaction['method'])),
+                    scheduled: boolval($transaction['schedule']),
+                    schedule: boolval($transaction['schedule'])
+                        ? DateTime::createFromFormat('Y-m-d H:i', $transaction['schedule']) : null,
+                )
+            );
+
+            //Envia e-mail de confirmaçãão de pagamento
+            $this->sendEmailWithdrawalSuccess($withdrawPix);
+        }
+
+
         return [
             'key' => $withdrawPix->key(),
             'type' => strtolower($withdrawPix->type()->value),
@@ -140,11 +172,31 @@ class AccountApplication
         ];
     }
 
+    private function sendEmailWithdrawalSuccess(AccountWithdrawPix $accountWithdrawPix)
+    {
+        if ($accountWithdrawPix->type() == TypeKeyEnum::EMAIL) {
+            $email = $accountWithdrawPix->key();
+            $title = 'Saque realizado com sucesso!';
+            $message = (new WithdrawEmail($email, $title))
+                ->template($accountWithdrawPix->accountWithdraw());
+            $this->withdrawEmailRepository->send($message);
+        }
+    }
+
 
     private function tryProcessWithdrawal(AccountWithdraw $accountWithdraw): void
     {
         //Tenta processamento agendado
         $account =  $accountWithdraw->account();
+
+        $withdrawPix = $this->accountWithdrawPixRepository
+            ->findByWithdrawId($accountWithdraw->id);
+
+        /*************************************************************
+         * 
+         * Aqui integração agendada com banco para fazer o pagamento
+         * 
+         ***********************************************************/
 
         $this->accountWithdrawRepository->save(
             new AccountWithdraw(
@@ -153,9 +205,12 @@ class AccountApplication
                 amount: $accountWithdraw->amount(),
                 method: $accountWithdraw->method(),
                 scheduled: $accountWithdraw->scheduled(),
-                schedule: $accountWithdraw->schedule()
+                schedule: $accountWithdraw->schedule(),
+                id: $accountWithdraw->id()
             )
         );
+
+        $this->sendEmailWithdrawalSuccess($withdrawPix);
     }
 
     private function failProcessWithdrawal(AccountWithdraw $accountWithdraw, Throwable $exception): void
@@ -170,7 +225,8 @@ class AccountApplication
                 amount: $accountWithdraw->amount(),
                 method: $accountWithdraw->method(),
                 scheduled: $accountWithdraw->scheduled(),
-                schedule: $accountWithdraw->schedule()
+                schedule: $accountWithdraw->schedule(),
+                id: $accountWithdraw->id()
             )
         );
     }

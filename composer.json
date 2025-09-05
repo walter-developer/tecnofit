@@ -26,6 +26,7 @@
         "hyperf/memory": "~3.1.0",
         "hyperf/process": "~3.1.0",
         "hyperf/validation": "^3.1",
+        "phpmailer/phpmailer": "^6.10",
         "ramsey/uuid": "^4.9"
     },
     "require-dev": {

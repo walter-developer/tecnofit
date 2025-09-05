@@ -11,4 +11,6 @@ interface AccountWithdrawPixContract
     public function save(AccountWithdrawPix $accountWithdraw): AccountWithdrawPix;
 
     public function findById(string $id): ?AccountWithdrawPix;
+
+    public function findByWithdrawId(string $id): ?AccountWithdrawPix;
 }

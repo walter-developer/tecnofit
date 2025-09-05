@@ -4,9 +4,12 @@ A instalação dos pacotes ( vendor ), esta automatizada para desenvolvimento lo
 a aplicação só inicia após todas as depêndencias estiverem instaladas ( pacotes instaladas e container composer desligado.),
 garantindo assim consistencia de pacotes em todas as maquinas que a aplicação rodar.
 
+-------------------
+
 A aplciação fica disponivel na porta padrão hyperf ( localhost:9501 ),
 e na padrão web ( localhost:80 ), a fim de facilitar o teste local.
 
+-------------------
 
 CRON ( Usando nativo Hyperf ):
 
@@ -17,13 +20,19 @@ Com isso posso reultilizar ela para processar no Cron, e também processar manua
 php bin/hyperf.php command:process-withdraw
 
 
+-------------------
+
+
+A classe App\Application\AccountApplication.php, contém comentários da logica, para melhor analise do revisor
+
+
+-------------------
+
+
 
 /**
 
 Ainda falta:
-
-
-- Fazer envio de email.
 
 - Fazer testes unitários
 

@@ -5,10 +5,11 @@ declare(strict_types=1);
 use App\Domain\Contracts\AccountContract;
 use App\Domain\Contracts\AccountWithdrawContract;
 use App\Domain\Contracts\AccountWithdrawPixContract;
+use App\Domain\Contracts\WithdrawEmailContract;
 use App\Infrastructure\Repositories\AccountRepository;
 use App\Infrastructure\Repositories\AccountWithdrawPixRepository;
 use App\Infrastructure\Repositories\AccountWithdrawRepository;
-use Hyperf\Watcher\Watcher;
+use App\Infrastructure\Repositories\WithdrawEmailRepository;
 
 /**
  * This file is part of Hyperf.
@@ -22,4 +23,5 @@ return [
     AccountContract::class => AccountRepository::class,
     AccountWithdrawContract::class => AccountWithdrawRepository::class,
     AccountWithdrawPixContract::class => AccountWithdrawPixRepository::class,
+    WithdrawEmailContract::class => WithdrawEmailRepository::class
 ];
