@@ -10,11 +10,14 @@ ENV TIMEZONE=${TIMEZONE} \
 
 ENV COMPOSER_CACHE_DIR=/root/.composer/cache
 
-RUN apk add --no-cache mysql-client
+RUN apk add --no-cache \
+    mysql-client \
+    php83-pecl-xdebug 
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-COPY ./php/php.ini /etc/php8/conf.d/custom.ini
+COPY ./php/php.ini     /etc/php8/conf.d/custom.ini
+COPY ./php/xdebug.ini  /etc/php8/conf.d/50_xdebug.ini
 
 WORKDIR /app
 

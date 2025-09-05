@@ -20,7 +20,13 @@ use Hyperf\Testing\TestCase;
  */
 class ExampleTest extends TestCase
 {
-    public function testExample()
+    public function testExample(): void
+    {
+        $this->realTestName = 'runExampleInCoroutine';
+        $this->runTestsInCoroutine();
+    }
+
+    public function runExampleInCoroutine(): void
     {
         $this->get('/')->assertOk()->assertSee('Hyperf');
     }

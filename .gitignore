@@ -13,4 +13,3 @@ vendor/
 *.cache
 .vscode/
 /phpstan.neon
-/phpunit.xml

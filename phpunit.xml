@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+    bootstrap="./test/bootstrap.php"
+    colors="true"
+    stopOnFailure="false"
+    backupGlobals="false"
+    backupStaticProperties="false"
+    cacheDirectory=".phpunit.cache"
+    processIsolation="false"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+>
+    <testsuites>
+        <testsuite name="All Cases">
+            <directory suffix="Test.php">./test/Cases</directory>
+        </testsuite>
+    </testsuites>
+
+    <php>
+        <ini name="error_reporting" value="-1"/>
+        <ini name="display_errors" value="1"/>
+    </php>
+</phpunit>

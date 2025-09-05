@@ -92,4 +92,4 @@ services:
       context: ./server/
       dockerfile: Dockerfile
     command: >
-        install --no-scripts --prefer-dist --optimize-autoloader
+      install --prefer-dist --optimize-autoloader
