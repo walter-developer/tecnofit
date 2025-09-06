@@ -16,8 +16,8 @@ RUN apk add --no-cache \
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-COPY ./php/php.ini     /etc/php8/conf.d/custom.ini
-COPY ./php/xdebug.ini  /etc/php8/conf.d/50_xdebug.ini
+COPY ./php/php.ini     /etc/php83/conf.d/custom.ini
+COPY ./php/xdebug.ini  /etc/php83/conf.d/50_xdebug.ini
 
 WORKDIR /app
 

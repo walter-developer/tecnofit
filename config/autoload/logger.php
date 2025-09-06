@@ -1,6 +1,11 @@
 <?php
 
 declare(strict_types=1);
+
+use Monolog\Logger;
+
+use function Hyperf\Support\env;
+
 /**
  * This file is part of Hyperf.
  *
@@ -15,7 +20,10 @@ return [
             'class' => Monolog\Handler\StreamHandler::class,
             'constructor' => [
                 'stream' => BASE_PATH . '/runtime/logs/hyperf.log',
-                'level' => Monolog\Logger::DEBUG,
+                'level' => match (env('APP_ENV', 'prod')) {
+                    'dev' => Logger::DEBUG,
+                    default => Logger::INFO
+                }
             ],
         ],
         'formatter' => [
