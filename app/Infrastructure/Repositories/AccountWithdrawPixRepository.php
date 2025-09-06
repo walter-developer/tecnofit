@@ -13,23 +13,24 @@ class AccountWithdrawPixRepository implements AccountWithdrawPixContract
 {
     use DomainMapper;
 
+    public function __construct(private AccountWithdrawPixDb $accountWithdraw) {}
 
     public function findById(string $id): ?AccountWithdrawPix
     {
-        return $this->toAccountWithdrawPixDomain(AccountWithdrawPixDb::find($id));
+        return $this->toAccountWithdrawPixDomain($this->accountWithdraw->find($id));
     }
 
     public function findWithdrawById(string $id): ?AccountWithdrawPix
     {
         return $this->toAccountWithdrawPixDomain(
-            AccountWithdrawPixDb::where('account_withdraw_id', $id)->first()
+            $this->accountWithdraw->where('account_withdraw_id', $id)->first()
         );
     }
 
     public function save(AccountWithdrawPix $account): AccountWithdrawPix
     {
         return $this->toAccountWithdrawPixDomain(
-            AccountWithdrawPixDb::updateOrCreate(
+            $this->accountWithdraw->updateOrInsert(
                 ['id' => $account->id()],
                 [
                     'type' => $account->type(),

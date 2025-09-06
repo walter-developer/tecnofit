@@ -14,19 +14,21 @@ class AccountRepository implements AccountContract
 
     use DomainMapper;
 
+    public function __construct(private DbAccount $account) {}
+
     public function existsById(string $id): bool
     {
-        return DbAccount::where('id', $id)->exists();
+        return $this->account->where('id', $id)->exists();
     }
 
     public function findById(string $id): ?Account
     {
-        return  $this->toAccountDomain(DbAccount::find($id));
+        return  $this->toAccountDomain($this->account->find($id));
     }
 
     public function updateBalance(Account $account): Account
     {
-        $db = DbAccount::find($account->id());
+        $db = $this->account->find($account->id());
         $db->update(['balance' => $account->balance()]);
         return $this->toAccountDomain($db);
     }
@@ -34,7 +36,7 @@ class AccountRepository implements AccountContract
     public function save(Account $account): Account
     {
 
-        return $this->toAccountDomain(DbAccount::updateOrCreate(
+        return $this->toAccountDomain($this->account->updateOrInsert(
             ['id' => $account->id()],
             [
                 'name' => $account->name(),

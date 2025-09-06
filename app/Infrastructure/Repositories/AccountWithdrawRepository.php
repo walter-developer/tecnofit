@@ -16,15 +16,17 @@ class AccountWithdrawRepository implements AccountWithdrawContract
 
     use DomainMapper;
 
+    public function __construct(private AccountWithdrawDb $accountWithdraw) {}
+
     public function findById(string $id): ?AccountWithdraw
     {
-        return $this->toAccountWithdrawDomain(AccountWithdrawDb::find($id));
+        return $this->toAccountWithdrawDomain($this->accountWithdraw->find($id));
     }
 
     public function chunkScheduledWithdrawals(Closure $chunk, int $limit = 20): void
     {
         $now = Carbon::now();
-        AccountWithdrawDb::where('scheduled', true)
+        $this->accountWithdraw->where('scheduled', true)
             ->where('scheduled_for', '<=', $now)
             ->where('done', false)
             ->where('error', false)
@@ -39,7 +41,7 @@ class AccountWithdrawRepository implements AccountWithdrawContract
     public function save(AccountWithdraw $accountWithdraw): AccountWithdraw
     {
         return  $this->toAccountWithdrawDomain(
-            AccountWithdrawDb::updateOrCreate(
+            $this->accountWithdraw->updateOrInsert(
                 ['id' => $accountWithdraw->id()],
                 [
                     'method' => $accountWithdraw->method(),
