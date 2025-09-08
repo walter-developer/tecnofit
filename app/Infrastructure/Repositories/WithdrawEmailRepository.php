@@ -11,11 +11,19 @@ use PHPMailer\PHPMailer\Exception;
 
 use function Hyperf\Config\config;
 
+
 class WithdrawEmailRepository implements WithdrawEmailContract
 {
+
+    protected function createMailer(): PHPMailer
+    {
+        return new PHPMailer(true);
+    }
+
     public function send(WithdrawEmail $message): void
     {
-        $mail = new PHPMailer(true);
+        $mail = $this->createMailer();
+
         try {
             $fromConfig = config('mailer.from') ?? [];
             $mailerConfig = config('mailer.mailers.smtp.options') ?? [];
@@ -33,7 +41,7 @@ class WithdrawEmailRepository implements WithdrawEmailContract
             $mail->Subject = $message->subject;
             $mail->Body    = $message->body;
             $mail->send();
-        } catch (Exception $e) {
+        } catch (\PHPMailer\PHPMailer\Exception $e) {
             throw new \RuntimeException("Erro ao enviar e-mail: {$mail->ErrorInfo}");
         }
     }

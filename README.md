@@ -77,6 +77,8 @@ Para executar os testes, dentro do container hyperf, execute:
 
 vendor/bin/phpunit --testdox
 
+vendor/bin/phpunit --coverage-html coverage
+
 -------------------
 
 

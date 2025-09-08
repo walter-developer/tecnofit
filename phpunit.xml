@@ -15,7 +15,11 @@
             <directory suffix="Test.php">./test/Cases</directory>
         </testsuite>
     </testsuites>
-
+    <source>
+        <include>
+            <directory suffix=".php">app</directory>
+        </include>
+    </source>
     <php>
         <ini name="error_reporting" value="-1"/>
         <ini name="display_errors" value="1"/>

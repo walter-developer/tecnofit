@@ -106,4 +106,52 @@ class AccountWithdrawRepositoryTest extends TestCase
         $this->assertSame(50.0, $saved->amount());
         $this->assertSame('acc123', $saved->account()->id());
     }
+
+    public function testChunkScheduledWithdrawals(): void
+    {
+        $processed = [];
+
+        $dbAccount = new DbAccount();
+        $dbAccount->id = 'acc123';
+        $dbAccount->name = 'Walter';
+        $dbAccount->balance = 100.0;
+
+        $dbWithdraw1 = new DbAccountWithdraw();
+        $dbWithdraw1->id = 'with1';
+        $dbWithdraw1->account_id = 'acc123';
+        $dbWithdraw1->method = 'PIX';
+        $dbWithdraw1->amount = 50.0;
+        $dbWithdraw1->scheduled = true;
+        $dbWithdraw1->done = false;
+        $dbWithdraw1->error = false;
+        $dbWithdraw1->error_reason = null;
+        $dbWithdraw1->scheduled_for = new \DateTime('2025-01-01 12:00:00');
+        $dbWithdraw1->setRelation('account', $dbAccount);
+
+        $dbWithdraw2 = clone $dbWithdraw1;
+        $dbWithdraw2->id = 'with2';
+
+        $mock = Mockery::mock(DbAccountWithdraw::class)->makePartial();
+        $mock->shouldReceive('where')->with('scheduled', true)->andReturnSelf();
+        $mock->shouldReceive('where')->with('scheduled_for', '<=', Mockery::type(\Carbon\Carbon::class))->andReturnSelf();
+        $mock->shouldReceive('where')->with('done', false)->andReturnSelf();
+        $mock->shouldReceive('where')->with('error', false)->andReturnSelf();
+        $mock->shouldReceive('whereNull')->with('error_reason')->andReturnSelf();
+        $mock->shouldReceive('chunk')->with(20, Mockery::type('Closure'))
+            ->andReturnUsing(function ($limit, $closure) use ($dbWithdraw1, $dbWithdraw2) {
+                $closure([$dbWithdraw1, $dbWithdraw2]);
+            });
+
+        $repository = new AccountWithdrawRepository($mock);
+
+        $repository->chunkScheduledWithdrawals(function (AccountWithdraw $withdraw) use (&$processed) {
+            $processed[] = $withdraw;
+        }, 20);
+
+        $this->assertCount(2, $processed);
+        $this->assertSame('with1', $processed[0]->id());
+        $this->assertSame('with2', $processed[1]->id());
+        $this->assertInstanceOf(AccountWithdraw::class, $processed[0]);
+        $this->assertInstanceOf(AccountWithdraw::class, $processed[1]);
+    }
 }

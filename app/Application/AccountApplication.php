@@ -190,7 +190,7 @@ class AccountApplication
         $account =  $accountWithdraw->account();
 
         $withdrawPix = $this->accountWithdrawPixRepository
-            ->findWithdrawById($accountWithdraw->id);
+            ->findWithdrawById($accountWithdraw->id());
 
         /*************************************************************
          * 

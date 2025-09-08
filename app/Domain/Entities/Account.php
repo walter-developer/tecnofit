@@ -24,7 +24,7 @@ class Account extends Domain
         return $this->id;
     }
 
-    public function name(): string
+    public function name(): ?string
     {
         return $this->name;
     }
