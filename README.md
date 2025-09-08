@@ -16,11 +16,11 @@
 2. Via terminal, acesse a pasta do repositório clonado.
 3. Na raiz do projeto, copie o arquivo `.env.example` para `.env`, comando abaixo:
 
-   cp .env.example .env
+        cp .env.example .env
 
 4. No terminal, inicie o projeto executando o comando abaixo:
 
-   docker compose up -d
+        docker compose up -d
 
 ⚠️ **OBS (composer):** o container Hyperf só é iniciado após a instalação de todas as dependências do projeto.  
 Aguarde o composer terminar e o container Hyperf iniciar para que o serviço fique disponível.  
@@ -69,7 +69,7 @@ Essa classe é usada para **processamento de saque agendado**.
 Na vida real, algumas vezes acontece do CRON parar, e ser necessário executar manualmente.  
 Com isso, posso reutilizá-la para processar no CRON, e também processar manualmente chamando o comando abaixo:
 
-php bin/hyperf.php command:process-withdraw
+    php bin/hyperf.php command:process-withdraw
 
 ---
 
@@ -90,8 +90,9 @@ php bin/hyperf.php command:process-withdraw
 
 Para executar os testes, dentro do container Hyperf, execute:
 
-vendor/bin/phpunit --testdox
-vendor/bin/phpunit --coverage-html coverage
+    vendor/bin/phpunit --testdox
+
+    vendor/bin/phpunit --coverage-html coverage
 
 - Testes unitários **100%**  
 - Coverage de testes **100%**  
