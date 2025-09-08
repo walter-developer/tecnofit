@@ -16,6 +16,7 @@ use App\Application\AccountApplication;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\HttpServer\Contract\ResponseInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 abstract class AbstractController
 {
@@ -24,5 +25,6 @@ abstract class AbstractController
         protected RequestInterface $request,
         protected ResponseInterface $response,
         protected AccountApplication $account,
+        protected LoggerInterface $logger
     ) {}
 }

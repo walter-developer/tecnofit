@@ -21,16 +21,34 @@ class IndexController extends AbstractController
 
     public function balance(UpdateAccountBalanceRequest $balance)
     {
+        $this->logger->info('Requisição recebida ( Recarga de saldo )', [
+            'method' => $balance->getMethod(),
+            'path' => $balance->path(),
+            'body' => $balance->validated(),
+        ]);
+
         return $this->account->updateBalance($balance->validated());
     }
 
     public function account(CreateAccountRequest $account)
     {
+        $this->logger->info('Requisição recebida ( Nova Conta )', [
+            'method' => $account->getMethod(),
+            'path' => $account->path(),
+            'body' => $account->validated(),
+        ]);
+
         return $this->account->createAccount($account->validated());
     }
 
     public function withdraw(CreateWithdrawPixRequest $withdraw)
     {
+        $this->logger->info('Requisição recebida ( Saque solicitado )', [
+            'method' => $withdraw->getMethod(),
+            'path' => $withdraw->path(),
+            'body' => $withdraw->validated(),
+        ]);
+
         return $this->account->createWithdraw($withdraw->validated());
     }
 

@@ -12,6 +12,7 @@ use App\Interface\Request\UpdateAccountBalanceRequest;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\HttpServer\Contract\ResponseInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 
@@ -22,6 +23,7 @@ class IndexControllerTest extends TestCase
     protected $requestMock;
     protected $responseMock;
     protected $containerMock;
+    protected $loggerMock;
 
     protected function setUp(): void
     {
@@ -31,12 +33,14 @@ class IndexControllerTest extends TestCase
         $this->requestMock = Mockery::mock(RequestInterface::class);
         $this->responseMock = Mockery::mock(ResponseInterface::class);
         $this->containerMock = Mockery::mock(ContainerInterface::class);
+        $this->loggerMock = Mockery::mock(LoggerInterface::class)->shouldIgnoreMissing();
 
         $this->controller = new IndexController(
             $this->containerMock,
             $this->requestMock,
             $this->responseMock,
-            $this->accountMock
+            $this->accountMock,
+            $this->loggerMock
         );
     }
 
@@ -52,7 +56,9 @@ class IndexControllerTest extends TestCase
         $validatedData = ['id' => 'acc123', 'balance' => 200];
 
         $request = Mockery::mock(UpdateAccountBalanceRequest::class);
-        $request->shouldReceive('validated')->once()->andReturn($validatedData);
+        $request->shouldReceive('validated')->andReturn($validatedData);
+        $request->shouldReceive('getMethod')->andReturn('POST');
+        $request->shouldReceive('path')->andReturn('/accounts/acc123/balance');
 
         $this->accountMock
             ->shouldReceive('updateBalance')
@@ -71,7 +77,9 @@ class IndexControllerTest extends TestCase
         $validatedData = ['name' => 'Walter'];
 
         $request = Mockery::mock(CreateAccountRequest::class);
-        $request->shouldReceive('validated')->once()->andReturn($validatedData);
+        $request->shouldReceive('validated')->andReturn($validatedData);
+        $request->shouldReceive('getMethod')->andReturn('POST');
+        $request->shouldReceive('path')->andReturn('/accounts');
 
         $this->accountMock
             ->shouldReceive('createAccount')
@@ -90,7 +98,9 @@ class IndexControllerTest extends TestCase
         $validatedData = ['account_id' => 'acc123', 'amount' => 100];
 
         $request = Mockery::mock(CreateWithdrawPixRequest::class);
-        $request->shouldReceive('validated')->once()->andReturn($validatedData);
+        $request->shouldReceive('validated')->andReturn($validatedData);
+        $request->shouldReceive('getMethod')->andReturn('POST');
+        $request->shouldReceive('path')->andReturn('/withdraw');
 
         $this->accountMock
             ->shouldReceive('createWithdraw')

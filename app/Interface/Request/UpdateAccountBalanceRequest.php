@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Interface\Request;
 
-use Hyperf\Context\Context;
-use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Validation\Request\FormRequest;
 
 class UpdateAccountBalanceRequest extends FormRequest
