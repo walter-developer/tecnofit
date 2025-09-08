@@ -21,8 +21,8 @@ services:
     image: hyperf
     restart: always
     container_name: hyperf
-    #command: ["start"]
-    command: ["server:watch"]
+    command: ["start"]
+    #command: ["server:watch"]
     volumes:
       - ./:/app
     ports:

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Database\Models\Main;
 
-use Hyperf\Collection\Collection;
 use Hyperf\Database\Model\Concerns\HasUuids;
 use Hyperf\Database\Model\Model as HyperfModel;
 use Hyperf\Database\Model\Builder;
+use Hyperf\Database\Model\SoftDeletes;
 
 class Model extends HyperfModel
 {
-    use HasUuids;
+    use HasUuids, SoftDeletes;
 
     public bool $incrementing = false;
 

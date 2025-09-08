@@ -1,94 +1,112 @@
-==========================================================================================
-INSTALAÇÃO
-==========================================================================================
+# 📘 Instalação e Documentação
 
-Dependências:
+---
 
-"Docker" e "Docker Compose" instalados na maquina host.
+## 🚀 Instalação
 
----------------
+### Dependências
+- **Docker**  
+- **Docker Compose**  
 
-Iniciando:
+---
 
-1 - Clone o repositório para qualquer local em sua maquina.
+### Iniciando
 
-2 - Via terminal, acesse a pasta do repositorio clonado.
+1. Clone o repositório para qualquer local em sua máquina.
+2. Via terminal, acesse a pasta do repositório clonado.
+3. Na raiz do projeto, copie o arquivo `.env.example` para `.env`, comando abaixo:
 
-3 - Na raiz do projeto, copiar o arquivo  .env.example para .env, comando abaixo:
+   cp .env.example .env
 
-    [ cp .env.example .env ]
+4. No terminal, inicie o projeto executando o comando abaixo:
 
-4 - no terminal, inicie o projeto, executando o comando abaixo:
+   docker compose up -d
 
-    [  docker compose up -d  ]
+⚠️ **OBS (composer):** o container Hyperf só é iniciado após a instalação de todas as dependências do projeto.  
+Aguarde o composer terminar e o container Hyperf iniciar para que o serviço fique disponível.  
 
-OBS ( composer ): o container hyperf só é ligado após a instalação de todas as dependências do projeto,
-     aguarde o composer terminar e o container hyperf iniciar, para que o serviço fique disponível. 
+⚠️ **OBS (Hyperf):** aguarde o container Hyperf iniciar completamente para que o serviço esteja disponível.  
 
-OBS ( hyperf ): aguardar o container hyperf iniciar "completamente", para que o serviço esteja disponivel
+🎉 **PARABÉNS:** Sua aplicação já está funcional localmente.  
 
+---
 
-PARABÉNS:
+## 📖 Documentação
 
-sua a aplicação já está funcional localmente.
-
-
-==========================================================================================
-DOCUMENTAÇÃO
-==========================================================================================
-
-Para ficilitar nos testes de API, esta em anexo na raiz do projeto o arquivo POSTMAN,
-para importar e testar os serviços.
+Para facilitar os testes da API, está em anexo, na raiz do projeto, o arquivo **POSTMAN**,  
+para importar e testar os serviços via aplicação POSTMAN:
 
 Tecnofit.postman_collection.json
 
--------------------
+---
 
-Infraestrutura docker ajustada/simplificada para desenvolvimento local.
+### 🛠️ Infraestrutura
 
-A instalação dos pacotes ( vendor ), esta automatizada para desenvolvimento local,
-a aplicação só inicia após todas as depêndencias estiverem instaladas ( pacotes instaladOs e container composer desligado.),
-garantindo assim consistencia de pacotes em todas as maquinas que a aplicação rodar.
+- Infraestrutura **Docker** ajustada/simplificada para desenvolvimento local.
+- A instalação dos pacotes (`vendor`) está **automatizada** para desenvolvimento local.
+- A aplicação só inicia após todas as dependências estarem instaladas  
+  (pacotes instalados e container composer desligado), garantindo assim consistência de pacotes em todas as máquinas onde a aplicação rodar.
 
--------------------
+---
 
-A aplciação fica disponivel na porta padrão hyperf ( localhost:9501 ),
-e na padrão web ( localhost:80 ), a fim de facilitar o teste local.
+### 🌐 Acesso
 
--------------------
+- A aplicação fica disponível na porta padrão do Hyperf:  
+  http://localhost:9501  
+- Também na porta padrão web:  
+  http://localhost:80  
 
-CRON ( Usando nativo Hyperf ):
+---
 
-Foi desenvolvido uma classe do tipo use Hyperf\Command\Command para processamento de saque agendado;
-Na vida real, algumas vezes acontece do CRON parar, e ser necessário executar manualmente.
-Com isso posso reultilizar ela para processar no Cron, e também processar manualmente chamando o comando abaixo:
+### ⏰ CRON (usando nativo Hyperf)
+
+Foi desenvolvida uma classe do tipo:
+
+use Hyperf\Command\Command;
+
+Essa classe é usada para **processamento de saque agendado**.  
+
+Na vida real, algumas vezes acontece do CRON parar, e ser necessário executar manualmente.  
+Com isso, posso reutilizá-la para processar no CRON, e também processar manualmente chamando o comando abaixo:
 
 php bin/hyperf.php command:process-withdraw
 
+---
 
--------------------
+### 📂 Estrutura de Código
 
-A classe App\Application\AccountApplication.php inclui comentários detalhados 
-sobre a lógica implementada, facilitando a compreensão e análise por parte do revisor.
+- A classe `App\Application\AccountApplication.php` inclui comentários detalhados sobre a lógica implementada,  
+  facilitando a compreensão e análise por parte do revisor.  
 
--------------------
+---
 
-Para executar os testes, dentro do container hyperf, execute:
+### 📧 Envio de E-mails
+
+- Para envio de e-mail foi usado o **PHPMailer**, devido aos pacotes de email do Hyperf 3 não estarem funcionando 100% na versão mais recente.  
+
+---
+
+### ✅ Testes
+
+Para executar os testes, dentro do container Hyperf, execute:
 
 vendor/bin/phpunit --testdox
-
 vendor/bin/phpunit --coverage-html coverage
 
-Testes unitários 100%
-Coverage de testes 100%
+- Testes unitários **100%**  
+- Coverage de testes **100%**  
 
--------------------
+---
 
+### 📌 Observações
 
-/**
+1. O container do Hyperf está sendo iniciado com o comando `start`.  
+   Caso precise refletir as alterações de código dinamicamente,  
+   descomente a linha abaixo no `docker-compose.yml`:
 
-Ainda falta:
+   command: ["server:watch"]
 
-- Fazer observabilidade
-
- */
+2. Toda a infraestrutura foi pensada para **desenvolvimento local**.  
+   Para uma versão de **deploy em PROD**, poderia ser usada uma imagem já empacotada com a aplicação,  
+   junto do composer e seu comando de `install`, fazendo assim não ser necessário o mapeamento dos volumes,  
+   extensão **xdebug** e container composer.
