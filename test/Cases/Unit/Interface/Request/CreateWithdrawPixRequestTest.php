@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace HyperfTest\Cases\Unit\Request;
+namespace HyperfTest\Cases\Unit\Interface\Request;
 
 use App\Interface\Request\CreateWithdrawPixRequest;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Hyperf\Context\RequestContext;
-use Hyperf\HttpServer\Request;
 use Mockery;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace HyperfTest\Cases\Unit\Controller;
+namespace HyperfTest\Cases\Unit\Interface\Controller;
 
 use App\Application\AccountApplication;
 use App\Interface\Controller\IndexController;

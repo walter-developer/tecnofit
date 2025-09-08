@@ -79,15 +79,15 @@ vendor/bin/phpunit --testdox
 
 vendor/bin/phpunit --coverage-html coverage
 
--------------------
+Testes unitários 100%
+Coverage de testes 100%
 
+-------------------
 
 
 /**
 
 Ainda falta:
-
-- Fazer testes unitários
 
 - Fazer observabilidade
 

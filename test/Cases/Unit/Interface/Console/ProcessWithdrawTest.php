@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace HyperfTest\Cases\Unit\Console;
+namespace HyperfTest\Cases\Unit\Interface\Console;
 
 use App\Application\AccountApplication;
 use App\Domain\Contracts\AccountWithdrawContract;

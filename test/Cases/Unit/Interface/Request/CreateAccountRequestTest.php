@@ -2,7 +2,8 @@
 
 declare(strict_types=1);
 
-namespace HyperfTest\Cases\Unit\Request;
+namespace HyperfTest\Cases\Unit\Interface\Request;
+
 
 use App\Interface\Request\CreateAccountRequest;
 use PHPUnit\Framework\TestCase;
